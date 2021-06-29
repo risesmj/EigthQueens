@@ -175,6 +175,7 @@ class AlgoritimoGenetico(
 
         //Verifica a probabilidade de crossover
         if(Random.nextDouble(1.0,100.01) <= this.taxaCrossover) {
+            println("Cruzamento realizada.")
             //Resgata a posição do ponto de corte
             val pontoCorte = Random.nextInt(2,6)
 
@@ -194,6 +195,8 @@ class AlgoritimoGenetico(
         val mutacao: Tabuleiro
 
         if(Random.nextDouble(1.0,100.01) <= taxaMutacao) {
+            println("Mutação realizada.")
+
             //Resgata as posições que serão trocadas
             val pos1 = Random.nextInt(0,7)
             var pos2 = Random.nextInt(0,7)

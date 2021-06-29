@@ -1,10 +1,27 @@
-fun main(){
+fun main(vararg args: String){
+
+    println("Informe a parâmetrização do algorítimo nesta ordem: ")
+    print("Taxa Crossover / Taxa mutação / Máximo de gerações / Máximo da população: ")
+
+    //Resgata os valores parâmetrizado
+    var (taxaCrossover,taxaMutacao,maxGeracaoes,maxPopulacao) = readInput()
+
+    //Valida o valor mínimo da população
+    if(maxPopulacao.toInt() < 2){
+        println("A população deve haver no mínimo dois indivíudos.")
+        return
+    }
+
+    println("")
+
     //Instância a classe do algorítimo
     val algoritimoGenetico = AlgoritimoGenetico(
-        20.0,
-        50.0,
-        100000,
-        10)
+        taxaCrossover,
+        taxaMutacao,
+        maxGeracaoes.toInt(),
+        maxPopulacao.toInt())
+
+    var solucao: Tabuleiro? = null
 
     //Gera a população inicial
     algoritimoGenetico.gerarPopulacao()
@@ -14,6 +31,9 @@ fun main(){
 
     //Percorre o máximo de gerações configuradas
     for(i in 0 until algoritimoGenetico.maxGeracoes){
+        //Break line
+        println("")
+
         println("------------------------ Geração ${i+1} ------------------------")
 
         //Array que contém a nova população que será gerada
@@ -50,13 +70,39 @@ fun main(){
 
         //Verifica se encontrou a solução
         if(algoritimoGenetico.isEncontrouSolucao()) {
-            val t = algoritimoGenetico.getSolucao()
-            t?.print()
-            println("Fitness: ${t?.fitness}")
+            solucao = algoritimoGenetico.getSolucao()
+
+            println("")
+            println("**********************************************************************")
+            println("Solução encontrada na geração: ${i+1}")
+            solucao?.print()
+            println("Fitness: ${solucao?.fitness}")
+            println("**********************************************************************")
             break
         }
     }
 
+    //Verifica se não localizou a solução esperada
+    if(solucao == null){
+        if(algoritimoGenetico.populacao.isNotEmpty()) {
+            algoritimoGenetico.populacao.sortBy { t -> t.fitness }
+
+            //Resgata o primeiro registro e imprime seu tabuleiro
+            solucao = algoritimoGenetico.populacao[0]
+            println("")
+            println("**********************************************************************")
+            println("Não localizado a solução de fitness zero, segue abaixo a mais próxima: ")
+            solucao?.print()
+            println("Fitness: ${solucao?.fitness}")
+            println("**********************************************************************")
+        }else{
+            println("Nenhuma solução encontrada =(")
+        }
+    }
+
 }
+
+//Interpreta os parâmetors de entrada
+fun readInput() = readLine()!!.split(' ').map { it.toDouble() }
 
 
